@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cybersecurity Project</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    .home-sections {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 32px;
+      margin-top: 0;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 1400px;
+    }
+    @media (max-width: 1100px) {
+      .home-sections { flex-direction: column; align-items: center; }
+      .news-feed, .quiz-container, .card { margin-bottom: 32px; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>Cybersecurity Project</header>
+  <main>
+    <div class="home-sections">
+      <div class="news-feed" id="newsFeed">
+        <h2>Cybersecurity Latest News</h2>
+        <ul id="newsList"></ul>
+      </div>
+      <div class="card">
+        <h1>Login</h1>
+        <form id="loginForm" autocomplete="off">
+          <input type="text" name="username" placeholder="Username" required aria-label="Username" />
+          <input type="password" name="password" placeholder="Password" required aria-label="Password" />
+          <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="register.html">Register</a></p>
+        <div id="loginMsg"></div>
+      </div>
+      <div class="quiz-container" id="quizContainer">
+        <h2>Cybersecurity Quiz</h2>
+        <div id="quizQuestion"></div>
+        <form id="quizForm"></form>
+        <div id="quizFeedback"></div>
+      </div>
+    </div>
+  </main>
+  <footer>© 2025 Cybersecurity Project. All rights reserved.</footer>
+  <script>
+    // News feed (static links)
+    const newsList = document.getElementById('newsList');
+    const newsItems = [
+      { title: "Major Data Breach Hits US Healthcare", url: "https://krebsonsecurity.com/" },
+      { title: "New Ransomware Campaign Targets Europe", url: "https://thehackernews.com/" },
+      { title: "Security Tips for Remote Workers", url: "https://krebsonsecurity.com/" },
+      { title: "Critical Chrome Update Released", url: "https://thehackernews.com/" }
+    ];
+    newsItems.forEach(news => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="${news.url}" target="_blank">${news.title}</a>`;
+      newsList.appendChild(li);
+    });
+
+    // Fake login (no backend)
+    document.getElementById('loginForm').onsubmit = function(e) {
+      e.preventDefault();
+      document.getElementById('loginMsg').textContent = "Login is a demo only. No backend required!";
+      document.getElementById('loginMsg').className = "alert alert-success";
+    };
+
+    // Cybersecurity multiple choice quiz
+    const quizQuestions = [
+      {
+        q: "What does 2FA stand for?",
+        options: ["Two-Factor Authentication", "Two-Faced Attack", "Twice-Failed Access", "Tokenized File Authorization"],
+        answer: "Two-Factor Authentication"
+      },
+      {
+        q: "Which is a common type of phishing?",
+        options: ["Email scam", "Physical theft", "Brute force", "SQL injection"],
+        answer: "Email scam"
+      },
+      {
+        q: "What is the purpose of a firewall?",
+        options: ["Block unauthorized access", "Store passwords", "Encrypt emails", "Scan for viruses"],
+        answer: "Block unauthorized access"
+      },
+      {
+        q: "Which protocol secures web traffic?",
+        options: ["HTTP", "FTP", "SSH", "HTTPS"],
+        answer: "HTTPS"
+      },
+      {
+        q: "What is malware?",
+        options: ["Malicious software", "A secure password", "Encrypted data", "A backup file"],
+        answer: "Malicious software"
+      },
+      {
+        q: "Which of these is NOT a strong password?",
+        options: ["P@ssw0rd123!", "123456", "Qx!8v$2k", "Lemon!Tree2024"],
+        answer: "123456"
+      }
+    ];
+
+    let quizIndex = Math.floor(Math.random() * quizQuestions.length);
+    const quizQuestion = document.getElementById('quizQuestion');
+    const quizForm = document.getElementById('quizForm');
+    const quizFeedback = document.getElementById('quizFeedback');
+
+    function showQuiz() {
+      const q = quizQuestions[quizIndex];
+      quizQuestion.innerHTML = `<strong>${q.q}</strong>`;
+      quizForm.innerHTML = q.options.map(opt =>
+        `<label style="display:block;margin:8px 0;">
+          <input type="radio" name="quizOption" value="${opt}" required> ${opt}
+        </label>`
+      ).join('') + `<button type="submit">Submit</button>`;
+      quizFeedback.textContent = '';
+    }
+
+    quizForm.onsubmit = function(e) {
+      e.preventDefault();
+      const selected = quizForm.querySelector('input[name="quizOption"]:checked');
+      if (selected && selected.value === quizQuestions[quizIndex].answer) {
+        quizFeedback.textContent = "Correct!";
+        quizFeedback.className = "alert alert-success";
+        // Pick a new random question (different from current)
+        let newIndex;
+        do {
+          newIndex = Math.floor(Math.random() * quizQuestions.length);
+        } while (newIndex === quizIndex && quizQuestions.length > 1);
+        quizIndex = newIndex;
+        setTimeout(showQuiz, 1200);
+      } else {
+        quizFeedback.textContent = "Try again!";
+        quizFeedback.className = "alert alert-error";
+      }
+    };
+
+    showQuiz();
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Two-Factor Authentication</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>Cybersecurity Project</header>
+  <main>
+    <div class="card">
+      <h1>Enter Your 2FA Code</h1>
+      <form action="/2fa" method="POST" aria-label="2FA code form">
+        <input type="text" name="code" placeholder="Enter code" required aria-label="2FA code" />
+        <button type="submit" aria-label="Verify code">Verify</button>
+        <button type="button" id="resendBtn" aria-label="Resend code" style="margin-left:8px;">Send Again</button>
+        <span id="spinner" style="display:none;"></span>
+      </form>
+      <div id="resendMsg" role="alert" aria-live="polite"></div>
+    </div>
+  </main>
+  <footer>© 2025 Cybersecurity Project. All rights reserved.</footer>
+  <script>
+    const resendBtn = document.getElementById('resendBtn');
+    const resendMsg = document.getElementById('resendMsg');
+    const spinner = document.getElementById('spinner');
+    let cooldown = false;
+
+    function showAlert(message, type) {
+      resendMsg.className = 'alert alert-' + type;
+      resendMsg.textContent = message;
+      setTimeout(() => {
+        resendMsg.className = 'alert alert-' + type;
+      }, 2500);
+    }
+
+    resendBtn.onclick = function() {
+      if (cooldown) return;
+      cooldown = true;
+      resendBtn.setAttribute('aria-disabled', 'true');
+      spinner.style.display = 'inline-block';
+      resendMsg.textContent = '';
+      fetch('/resend-2fa', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          spinner.style.display = 'none';
+          showAlert(data.message || 'Code sent!', data.message && data.message.includes('Failed') ? 'error' : 'success');
+          setTimeout(() => {
+            cooldown = false;
+            resendBtn.removeAttribute('aria-disabled');
+          }, 30000);
+        })
+        .catch(() => {
+          spinner.style.display = 'none';
+          showAlert('Error sending code.', 'error');
+          setTimeout(() => {
+            cooldown = false;
+            resendBtn.removeAttribute('aria-disabled');
+          }, 30000);
+        });
+    };
+  </script>
+</body>
+</html>
