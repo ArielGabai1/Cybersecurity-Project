@@ -11,15 +11,23 @@
   <main>
     <div class="card register-card">
       <h1>Register</h1>
-      <form action="/register" method="POST" aria-label="Registration form">
+      <form id="registerForm" autocomplete="off">
         <input type="text" name="username" placeholder="Username" required aria-label="Username" />
         <input type="email" name="email" placeholder="Email" required aria-label="Email" />
         <input type="password" name="password" placeholder="Password" required aria-label="Password" />
-        <button type="submit" aria-label="Register">Register</button>
+        <button type="submit">Register</button>
       </form>
-      <p>Already have an account? <a href="/login">Login</a></p>
+      <p>Already have an account? <a href="index.html">Login</a></p>
+      <div id="registerMsg"></div>
     </div>
   </main>
   <footer>© 2025 Cybersecurity Project. All rights reserved.</footer>
+  <script>
+    document.getElementById('registerForm').onsubmit = function(e) {
+      e.preventDefault();
+      document.getElementById('registerMsg').textContent = "Registration is a demo only. No backend required!";
+      document.getElementById('registerMsg').className = "alert alert-success";
+    };
+  </script>
 </body>
 </html>
