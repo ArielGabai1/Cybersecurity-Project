@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notification</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>Cybersecurity Project</header>
+  <main>
+    <div class="feedback-card">
+      <h2 id="feedbackTitle"></h2>
+      <p id="feedbackMsg"></p>
+      <a id="feedbackLink" href="/">Go to Home</a>
+    </div>
+  </main>
+  <footer>© 2025 Cybersecurity Project. All rights reserved.</footer>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('title')) document.getElementById('feedbackTitle').textContent = params.get('title');
+    if(params.get('msg')) document.getElementById('feedbackMsg').textContent = params.get('msg');
+    if(params.get('link')) {
+      document.getElementById('feedbackLink').href = params.get('link');
+      document.getElementById('feedbackLink').textContent = 'Continue';
+    }
+  </script>
+</body>
+</html>
